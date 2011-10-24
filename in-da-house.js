@@ -234,7 +234,7 @@ $(document).ready(function(){
                     url: that.getUrl(),
                     type: 'put',
                     data: that.getForm().serializeArray(),
-                    beforeSend: function(xhr) { xhr.setRequestHeader("Accept", "application/json"); },
+                    dataType: 'json',
                     success: function(resource){ that.setResource(resource); }
                 };
                 this._ajax_options = $.extend(ajax_defaults, this._options.ajaxOptions);
