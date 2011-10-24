@@ -32,8 +32,8 @@ $(document).ready(function(){
         // belongs here. AFAIAC.
         initialize: function (edit_in_da_house, options) {
             this.el = edit_in_da_house;
-            this._resource = edit_in_da_house.data('edit_in_da_house') ? edit_in_da_house.data('edit_in_da_house') : {};
-            this._initial_options = options ? options : {};
+            this._resource = edit_in_da_house.data('edit_in_da_house') || {};
+            this._initial_options = options || {};
             this._switch = {
                 editable: 'editor',
                 editor: 'editable'
@@ -169,7 +169,7 @@ $(document).ready(function(){
             }
 
             if(!this._resource[this._attribute]){
-                this._resource[this._attribute] = this._input.val() ? this._input.val() : '';
+                this._resource[this._attribute] = this._input.val() || '';
             }
             // Raise my finger if we don't find submit and input ?
             this._editor = this.el.find('.editor');
@@ -234,7 +234,7 @@ $(document).ready(function(){
                     url: that.getUrl(),
                     type: 'put',
                     data: that.getForm().serializeArray(),
-                    dataType: 'json',
+                    dataType: 'json'
                     success: function(resource){ that.setResource(resource); }
                 };
                 this._ajax_options = $.extend(ajax_defaults, this._options.ajaxOptions);
