@@ -26,6 +26,17 @@ $(document).ready(function(){
         this.initialize(edit_in_da_house, options);
     };
     $.in_da_house.houses = {};
+    $.in_da_house.defaults = {
+        defaultEditableText: 'Please fill-in field ',
+        initialSwitch: 'editable',
+        remoteUpdate: true,
+        ajaxOptions: {},
+        updateResource: this.remoteUpdate,
+
+        findUrl: function (that){
+            return that.getForm().attr('action');
+        }
+    };
     $.in_da_house.prototype = {
         // initialize and setup
         // Maybe too big, yet, everything that's in here
@@ -38,17 +49,7 @@ $(document).ready(function(){
                 editable: 'editor',
                 editor: 'editable'
             };
-            this._defaults = {
-                initialSwitch: 'editable',
-                remoteUpdate: true,
-                ajaxOptions: {},
-                updateResource: this.remoteUpdate,
-
-                findUrl: function (that){
-                    return that.getForm().attr('action');
-                }
-            };
-            this._options = $.extend(this._defaults, this._initial_options);
+            this._options = $.extend($.in_da_house.defaults, this._initial_options);
             // if remoteUpdate is set as false and no callback for the resource
             // update is given, set the default local update callback
             if(!this._options.remoteUpdate && !this._initial_options.updateResource){
@@ -187,10 +188,16 @@ $(document).ready(function(){
         setDefaultEditable: function (){
             this.el.append(
                 '<span class="editable">' +
-                this._resource[this._attribute] +
+                this.setDefaultEditableText() +
                 '</span>'
             );
             this._editable = this.el.find('.editable');
+        },
+
+        // Helper method
+        // Gives away the editable text and knonw how to default
+        setDefaultEditableText: function (){
+            return this._resource[this._attribute] ? this._resource[this._attribute] : (this._options.defaultEditableText + this._attribute);
         },
 
         // Default callback to determine the ajax update URL
