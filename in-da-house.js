@@ -197,7 +197,7 @@ $(document).ready(function(){
         // Helper method
         // Gives away the editable text and knonw how to default
         setDefaultEditableText: function (){
-            return this._resource[this._attribute] ? this._resource[this._attribute] : (this._options.defaultEditableText + this._attribute);
+            return this._resource[this._attribute] || (this._options.defaultEditableText + this._attribute);
         },
 
         // Default callback to determine the ajax update URL
