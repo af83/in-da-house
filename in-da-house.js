@@ -43,7 +43,7 @@ $(document).ready(function(){
         // belongs here. AFAIAC.
         initialize: function (edit_in_da_house, options) {
             this.el = edit_in_da_house;
-            this._resource = edit_in_da_house.data('edit_in_da_house') || {};
+            this._resource = edit_in_da_house.data('edit-in-da-house') || {};
             this._initial_options = options || {};
             this._switch = {
                 editable: 'editor',
