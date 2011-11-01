@@ -30,8 +30,11 @@ A container, on which *in_da_house(options)* has already being called, can call 
 This will be more thoroughly specified later.
 
 ```javascript
-$('.selector').in_da_house({that: 'option'}); // may have already been called by the library if the default class was set on the container
-$('.selector').in_da_house('switchEditor'); // this will "manually" set the editor elements as visible, and the editable hidden
+$('.selector').in_da_house({that: 'option'});
+// may have already been called by the library if the default class was set on the container
+
+$('.selector').in_da_house('switchEditor');
+// this will "manually" set the editor elements as visible, and the editable hidden
 ```
 
 ## Why?
