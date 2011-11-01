@@ -68,12 +68,16 @@ test("Setup with a more complex html structure and options, local update value a
   equals(structure.editable.html(), '2', 'Editable inner HTML is updated');
 });
 
+// TODO test callback calls through the interface $('selector').in_da_house('callback');
+
 module('Methods');
 
 function setupMethod(options, fixture){
     fixture = fixture || 'minimum_valid_form.html';
     loadFixtures(fixture);
-    return $.in_da_house.houses[$('.edit_in_da_house').in_da_house(options).attr('class')];
+    $.in_da_house.houses = {};
+    var container = $('.edit_in_da_house').in_da_house(options);
+    return $.in_da_house.houses[container.attr('class')];
 }
 
 test("initialize method", function() {
@@ -82,8 +86,8 @@ test("initialize method", function() {
     equals(da_house.el.get(0), $('.edit_in_da_house').get(0));
     ok(da_house._options);
     // TODO test remoteUpdate option setting
-    ok(da_house._editor);
-    ok(da_house._editable);
+    ok(da_house._editor.size() == 2, "Two elements found in the editor");
+    ok(da_house._editable.size() == 1, "One element found in the editable");
     // TODO test events and callbacks
 });
 test("updateEditableAndSwitch method", function() {
@@ -115,7 +119,6 @@ test("remoteUpdate method pending", function() {
     ok(true, "Test pending");
 });
 test("localUpdate method pending", function() {
-    var da_house = setupMethod({ remoteUpdate: false });
     // value update is covered by "updateResource method" and "setResource method" tests.
     // Will see later if there's anything specific to be done here.
     ok(true, "Test pending");
@@ -143,29 +146,69 @@ test("setEditable method", function() {
 test("setEditor method pending", function() {
     ok(true, "Test pending");
 });
-test("setDefautSubmit method pending", function() {
+test("setDefautSubmit method", function() {
+    loadFixtures('minimum_valid_form.html');
+    ok($('.edit_in_da_house').find('.editor.submit').size() == 0, "No submit trigger should be found in basic HTML structure");
+
+    $('.edit_in_da_house').in_da_house();
+    ok($('.edit_in_da_house').find('.editor.submit').size() == 1, "Submit trigger should be created after calling edit_in_da_house() on container");
+});
+test("setDefaultEditable method", function() {
+    // This is covered by the "setEditable method" test. Yet...
+    loadFixtures('minimum_valid_form.html');
+    ok($('.edit_in_da_house').find('.editable').size() == 0, "No editable element(s) should be found at this point");
+
+    var da_house = setupMethod({ remoteUpdate: false });
+    ok(da_house._editable.size() == 1, "We found editable element(s)");
+    equals(da_house._editable.html(), da_house.setDefaultEditableText(), "We found the default editable inner HTML");
+});
+test("setDefaultEditableText method", function() {
+    var da_house = setupMethod({ remoteUpdate: false });
+    equals(da_house._editable.html(), $.in_da_house.defaults.defaultEditableText + 'bar_baz', "Default editable text found in editable");
+});
+test("getUrl method", function() {
+    var da_house_one = setupMethod();
+    equals(da_house_one.getUrl(), '/foo/bar/baz', "Remote update will be performed with hitting /foo/bar/baz");
+
+    var da_house_two = setupMethod({ findUrl: function(that){ return '/another/version/of/foo/bar/baz'; } });
+    equals(da_house_two.getUrl(), '/another/version/of/foo/bar/baz', "Remote update will be performed with hitting /another/version/of/foo/bar/baz");
+});
+test("switchOnAndOff method", function() {
+    var da_house_one = setupMethod();
+    equals(da_house_one._input.attr('style'), 'display: none;', "Structure displays editable at startup (default)");
+    ok( !da_house_one._editable.attr('style'), "Structure displays editable at startup (default)");
+
+    var da_house_two = setupMethod({ initialSwitch: 'editor' });
+    ok( !da_house_two._input.attr('style'), "Structure displays editor at startup");
+    equals(da_house_two._editable.attr('style'), 'display: none;', "Structure displays editor at startup");
+
+    var da_house_three = setupMethod();
+    da_house_three.switchOnAndOff('editor');
+    equals(da_house_three._input.attr('style'), 'display: inline;', "Structure displays editor after method call");
+    equals(da_house_three._editable.attr('style'), 'display: none;', "Structure displays editor after method call");
+
+    var da_house_four = setupMethod({ initialSwitch: 'editor' });
+    da_house_four.switchOnAndOff('editor');
+    ok(!da_house_four._input.attr('style'), "Structure still displays editor after method call");
+    equals(da_house_four._editable.attr('style'), 'display: none;', "Structure still displays editor after method call");
+});
+test("switchEditor method", function() {
+    // Switch usage is covered by tests of "switchOnAndOff method"
+    // Will see later if there's anything specific to be done here.
     ok(true, "Test pending");
 });
-test("setDefaultEditable method pending", function() {
-    ok(true, "Test pending");
+test("getForm method", function() {
+    var da_house = setupMethod();
+    ok(!da_house._form, "No form is set yet");
+    equals(da_house.getForm().get(0), $('#minimum_form').get(0), "Form is found");
+    ok(da_house._form, "Form is set now");
 });
-test("setDefaultEditableText method pending", function() {
-    ok(true, "Test pending");
-});
-test("getUrl method pending", function() {
-    ok(true, "Test pending");
-});
-test("switchOnAndOff method pending", function() {
-    ok(true, "Test pending");
-});
-test("switchEditor method pending", function() {
-    ok(true, "Test pending");
-});
-test("getForm method pending", function() {
-    ok(true, "Test pending");
-});
-test("ajaxDefaults method pending", function() {
-    ok(true, "Test pending");
+test("ajaxParams method", function() {
+    var da_house = setupMethod( {ajaxOptions: {type: 'get', requestHeader: ['doTHisWith', 'thisHeader']}} );
+    var myAjaxParams = da_house.ajaxParams();
+
+    equals(myAjaxParams.type, 'get', "We change the HTTP verb to get");
+    equals(typeof myAjaxParams.beforeSend, 'function', "A callback to alter the request headers is set");
 });
 
 })();
