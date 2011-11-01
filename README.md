@@ -20,7 +20,7 @@ So far, the basic expected HTML structure is a container, let's say a *div*, con
 ```
 
 That's all, yet that's mandatory, in-da-house won't create the user input element.
-Why ? Because most of the time the user input will come with additionnal classes, a value coming from a database, and would be much more handily rendered by a framework related templating system.
+Why ? Because most of the time the user input will come with additionnal classes, a value from a database, etc... All this is much more handily rendered by a framework related templating system.
 
 Also, have a look at the HTML snippets in *test/fixtures*, to get a better glimpse of what the library expects and is capable of.
 
@@ -40,7 +40,8 @@ $('.selector').in_da_house('switchEditor');
 ## Why?
 
 Because I already had snippets dealing out with this feature before i looked at what already existed and i wanted to further the concept.
-Because, despite what other libraries stated, i found them not enough flexible and easy to integrate with the use of framework.
+
+Because, despite what other libraries stated, i found them not enough flexible and easy to integrate with the use of a framework.
 
 ## License
 
