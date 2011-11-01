@@ -49,7 +49,7 @@ $(document).ready(function(){
                 editable: 'editor',
                 editor: 'editable'
             };
-            this._options = $.extend($.in_da_house.defaults, this._initial_options);
+            this._options = $.extend({}, $.in_da_house.defaults, this._initial_options);
             // if remoteUpdate is set as false and no callback for the resource
             // update is given, set the default local update callback
             if(!this._options.remoteUpdate && !this._initial_options.updateResource){
@@ -104,7 +104,7 @@ $(document).ready(function(){
         // Default callback for the ajax update
         // of the resource
         remoteUpdate: function (that){
-            $.ajax( that.ajaxDefaults() );
+            $.ajax( that.ajaxParams() );
         },
 
         // Default callback for the local-only 
@@ -200,7 +200,9 @@ $(document).ready(function(){
             return this._resource[this._attribute] || (this._options.defaultEditableText + this._attribute);
         },
 
-        // Default callback to determine the ajax update URL
+        // Remote update URL getter
+        // Alternate calls can be contrived by specifying
+        // a different findUrl callback in the options
         getUrl: function (){
             return (this._options.findUrl)(this);
         },
@@ -234,7 +236,7 @@ $(document).ready(function(){
 
         // Setup method
         // Deals with the ajax call options
-        ajaxDefaults: function (){
+        ajaxParams: function (){
             if(!this._ajax_options){
                 var that = this;
                 var ajax_defaults = {
