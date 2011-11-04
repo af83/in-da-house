@@ -35,6 +35,10 @@ $(document).ready(function(){
 
         findUrl: function (that){
             return that.getForm().attr('action');
+        },
+
+        updateEditable: function (that){
+            that._editable.html( that.getValue() );
         }
     };
     $.in_da_house.prototype = {
@@ -83,7 +87,7 @@ $(document).ready(function(){
         // serves as model in this plugin
         // Then the switch 'editable' is pressed
         updateEditableAndSwitch: function (){
-            this._editable.html( this._resource[this._attribute] );
+            (this._options.updateEditable)(this);
             this.switchOnAndOff('editable');
         },
             
@@ -232,6 +236,12 @@ $(document).ready(function(){
                 this._form = this._submit.closest('form');
             }
             return this._form;
+        },
+
+        // Helper method
+        // Really only to be more concise
+        getValue: function (){
+            return this._resource[this._attribute];
         },
 
         // Setup method
