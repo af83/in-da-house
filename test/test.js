@@ -99,6 +99,19 @@ test("updateEditableAndSwitch method", function() {
 
     equals(da_house._editable.attr('style'), 'display: inline;', "Editable elements should be visible");
     equals(da_house._editable.html(), '2', 'Editable inner HTML is updated');
+
+    var da_house_two = setupMethod({
+        remoteUpdate: false,
+        updateEditable: function(that){ that._editable.find('#editable_value').html(that.getValue()); }
+    }, 'minimum_valid_form_with_editable.html');
+    da_house_two._resource[da_house_two._attribute] = 2;
+
+    da_house_two.switchEditor();
+    da_house_two.updateEditableAndSwitch();
+
+    equals(da_house_two._editable.attr('style'), 'display: block;', "Editable elements should be visible");
+    equals(da_house_two._editable.children().size(), 2, 'Editable should have children and not only a value');
+    equals(parseInt( $('#editable_value').html() ), da_house_two.getValue(), 'The value in the Editable value place holder is updated');
 });
 test("updateResource method", function() {
     var da_house = setupMethod({ remoteUpdate: false });
