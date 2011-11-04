@@ -2,6 +2,7 @@
 
 A JQuery plugin to implement a flexible "edit in place" mechanism
 
+Oh... BTW, even if it's working, it's alpha.
 
 ## Usage
 
